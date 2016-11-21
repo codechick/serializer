@@ -36,6 +36,8 @@ use JMS\Serializer\Tests\Fixtures\ObjectWithEmptyNullableAndEmptyArrays;
 use JMS\Serializer\Tests\Fixtures\ObjectWithIntListAndIntMap;
 use JMS\Serializer\Tests\Fixtures\PersonSecret;
 use JMS\Serializer\Tests\Fixtures\PersonSecretMore;
+use JMS\Serializer\Tests\Fixtures\PersonSecretMoreVirtual;
+use JMS\Serializer\Tests\Fixtures\PersonSecretVirtual;
 use JMS\Serializer\Tests\Fixtures\Tag;
 use JMS\Serializer\Tests\Fixtures\Timestamp;
 use JMS\Serializer\Tests\Fixtures\Tree;
@@ -205,6 +207,14 @@ abstract class BaseSerializationTest extends \PHPUnit_Framework_TestCase
         $personMoreSecret->gender = 'f';
         $personMoreSecret->name = 'mike';
 
+        $personVirtual = new PersonSecretVirtual();
+        $personVirtual->gender = 'f';
+        $personVirtual->name = 'mike';
+
+        $personMoreSecretVirtual = new PersonSecretMoreVirtual();
+        $personMoreSecretVirtual->gender = 'f';
+        $personMoreSecretVirtual->name = 'mike';
+
         $showGender = new ExpressionFunction('show_data', function () {
             return "true";
         }, function () {
@@ -235,6 +245,26 @@ abstract class BaseSerializationTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 $personMoreSecret,
+                $hideGender,
+                'person_secret_hide'
+            ],
+            [
+                $personVirtual,
+                $showGender,
+                'person_secret_hide'
+            ],
+            [
+                $personVirtual,
+                $hideGender,
+                'person_secret_show'
+            ],
+            [
+                $personMoreSecretVirtual,
+                $showGender,
+                'person_secret_show'
+            ],
+            [
+                $personMoreSecretVirtual,
                 $hideGender,
                 'person_secret_hide'
             ]
