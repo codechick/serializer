@@ -232,7 +232,7 @@ class ClassMetadata extends MergeableClassMetadata
     {
         $this->sortProperties();
 
-        return serialize(array(
+        $toSerialize = array(
             $this->preSerializeMethods,
             $this->postSerializeMethods,
             $this->postDeserializeMethods,
@@ -248,11 +248,16 @@ class ClassMetadata extends MergeableClassMetadata
             $this->discriminatorValue,
             $this->discriminatorMap,
             parent::serialize(),
-        ));
+        );
+
+        $toSerialize['usingExpression'] = $this->usingExpression;
+
+        return serialize($toSerialize);
     }
 
     public function unserialize($str)
     {
+        $unserialized =  unserialize($str);
         list(
             $this->preSerializeMethods,
             $this->postSerializeMethods,
@@ -269,7 +274,11 @@ class ClassMetadata extends MergeableClassMetadata
             $this->discriminatorValue,
             $this->discriminatorMap,
             $parentStr
-        ) = unserialize($str);
+        ) = $unserialized;
+
+        if (isset($unserialized['usingExpression'])) {
+            $this->usingExpression = $unserialized['usingExpression'];
+        }
 
         parent::unserialize($parentStr);
     }
